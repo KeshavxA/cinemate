@@ -6,6 +6,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Watchlists from './pages/Watchlists';
 import MovieDetails from './pages/MovieDetails';
+import Search from './pages/Search';
 import ProtectedRoute from './components/ProtectedRoute';
 import MovieCard from './components/MovieCard';
 import Recommendations from './components/Recommendations';
@@ -21,6 +22,7 @@ function Home() {
       <p>Your favorite movie tracking app.</p>
       
       <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px', marginBottom: '40px' }}>
+        <Link to="/search" style={navBtnStyle('#ffc107')}>Search</Link>
         {!currentUser ? (
           <>
             <Link to="/login" style={navBtnStyle('#007bff')}>Log In</Link>
@@ -62,6 +64,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
