@@ -8,6 +8,7 @@ import Watchlists from './pages/Watchlists';
 import MovieDetails from './pages/MovieDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import MovieCard from './components/MovieCard';
+import Recommendations from './components/Recommendations';
 import { DUMMY_MOVIES } from './data/dummyMovies';
 import './App.css';
 
@@ -33,6 +34,8 @@ function Home() {
           </>
         )}
       </div>
+
+      <Recommendations />
 
       <h2>Popular Movies</h2>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginTop: '20px' }}>
