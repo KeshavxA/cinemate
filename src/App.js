@@ -5,16 +5,11 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Watchlists from './pages/Watchlists';
+import MovieDetails from './pages/MovieDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import MovieCard from './components/MovieCard';
+import { DUMMY_MOVIES } from './data/dummyMovies';
 import './App.css';
-
-const DUMMY_MOVIES = [
-  { id: '1', title: 'Inception', year: '2010' },
-  { id: '2', title: 'The Matrix', year: '1999' },
-  { id: '3', title: 'Interstellar', year: '2014' },
-  { id: '4', title: 'Dune', year: '2021' },
-];
 
 function Home() {
   const { currentUser, logout } = useAuth();
@@ -64,6 +59,7 @@ function App() {
         <div className="App">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route 
