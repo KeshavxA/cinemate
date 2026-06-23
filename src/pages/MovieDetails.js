@@ -118,6 +118,22 @@ export default function MovieDetails() {
       </div>
 
       <div style={{ borderTop: '1px solid #ddd', paddingTop: '30px' }}>
+        {movie.trailerVideoId && (
+          <div style={{ marginBottom: '40px' }}>
+            <h2>Official Trailer</h2>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '8px' }}>
+              <iframe 
+                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                src={`https://www.youtube.com/embed/${movie.trailerVideoId}`} 
+                title={`${movie.title} Trailer`}
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        )}
+
         <h2>Community Reviews</h2>
         
         {currentUser ? (
