@@ -25,7 +25,7 @@ export default function Profile() {
       <div style={{ marginBottom: '20px' }}>
         <strong>Email:</strong> {currentUser?.email}
       </div>
-      
+
       <button onClick={handleLogout} style={{ padding: '10px 20px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
         Log Out
       </button>

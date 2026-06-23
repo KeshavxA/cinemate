@@ -66,7 +66,7 @@ export default function Search() {
       
       {/* Search and Filters Section */}
       <div style={{ 
-        backgroundColor: '#f8f9fa', 
+        backgroundColor: 'var(--section-bg)', 
         padding: '20px', 
         borderRadius: '8px', 
         marginBottom: '30px',
@@ -81,7 +81,7 @@ export default function Search() {
             placeholder="Search by title or actor name..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: '100%', padding: '12px', fontSize: '16px', borderRadius: '4px', border: '1px solid #ced4da', boxSizing: 'border-box' }}
+            style={{ width: '100%', padding: '12px', fontSize: '16px', borderRadius: '4px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box' }}
           />
         </div>
 
@@ -116,7 +116,7 @@ export default function Search() {
       <div>
         <h2 style={{ marginBottom: '20px' }}>Results ({filteredMovies.length})</h2>
         {filteredMovies.length === 0 ? (
-          <p style={{ color: '#666' }}>No movies found matching your criteria.</p>
+          <p style={{ color: 'var(--muted-text)' }}>No movies found matching your criteria.</p>
         ) : (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {filteredMovies.map(movie => (
@@ -133,8 +133,9 @@ export default function Search() {
 const filterStyle = {
   padding: '10px',
   borderRadius: '4px',
-  border: '1px solid #ced4da',
-  backgroundColor: 'white',
+  border: '1px solid var(--input-border)',
+  backgroundColor: 'var(--input-bg)',
+  color: 'var(--text-color)',
   flex: '1',
   minWidth: '150px'
 };

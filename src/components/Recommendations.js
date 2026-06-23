@@ -87,7 +87,7 @@ export default function Recommendations() {
     return (
       <div style={{ margin: '40px 0' }}>
         <h2>Recommended for You</h2>
-        <p style={{ color: '#666' }}>Rate some movies or add them to your watchlist to get personalized recommendations!</p>
+        <p style={{ color: 'var(--muted-text)' }}>Rate some movies or add them to your watchlist to get personalized recommendations!</p>
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function Recommendations() {
   return (
     <div style={{ margin: '40px 0' }}>
       <h2>Recommended for You</h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>Based on your interest in: {topGenres.join(', ')}</p>
+      <p style={{ color: 'var(--muted-text)', marginBottom: '20px' }}>Based on your interest in: {topGenres.join(', ')}</p>
       <div style={{ display: 'flex', gap: '20px', overflowX: 'auto', paddingBottom: '10px' }}>
         {recommendedMovies.map(movie => (
           <MovieCard key={movie.id} movie={movie} />

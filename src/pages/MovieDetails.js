@@ -100,24 +100,24 @@ export default function MovieDetails() {
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: '20px', cursor: 'pointer' }}>&larr; Back</button>
+      <button onClick={() => navigate(-1)} style={{ marginBottom: '20px', cursor: 'pointer', background: 'none', border: 'none', color: 'var(--text-color)', fontSize: '16px' }}>&larr; Back</button>
       
       <div style={{ display: 'flex', gap: '20px', marginBottom: '40px' }}>
-        <div style={{ width: '200px', height: '300px', backgroundColor: '#f0f0f0', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '8px' }}>
-          <span style={{ color: '#888' }}>No Poster</span>
+        <div style={{ width: '200px', height: '300px', backgroundColor: 'var(--header-bg)', display: 'flex', justifyContent: 'center', alignItems: 'center', borderRadius: '8px' }}>
+          <span style={{ color: 'var(--muted-text)' }}>No Poster</span>
         </div>
         <div>
           <h1 style={{ margin: '0 0 10px 0' }}>{movie.title} ({movie.year})</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
             <StarRating rating={Math.round(averageRating)} readOnly={true} />
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{averageRating > 0 ? averageRating : 'No ratings yet'}</span>
-            <span style={{ color: '#666' }}>({reviews.length} reviews)</span>
+            <span style={{ color: 'var(--muted-text)' }}>({reviews.length} reviews)</span>
           </div>
           <p style={{ lineHeight: '1.6' }}>{movie.description}</p>
         </div>
       </div>
 
-      <div style={{ borderTop: '1px solid #ddd', paddingTop: '30px' }}>
+      <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '30px' }}>
         {movie.trailerVideoId && (
           <div style={{ marginBottom: '40px' }}>
             <h2>Official Trailer</h2>
@@ -137,7 +137,7 @@ export default function MovieDetails() {
         <h2>Community Reviews</h2>
         
         {currentUser ? (
-          <form onSubmit={submitReview} style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
+          <form onSubmit={submitReview} style={{ backgroundColor: 'var(--section-bg)', padding: '20px', borderRadius: '8px', marginBottom: '30px' }}>
             <h3>Write a Review</h3>
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', marginBottom: '5px' }}>Rating</label>
@@ -149,7 +149,7 @@ export default function MovieDetails() {
                 rows="4" 
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
-                style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box' }}
                 placeholder="What did you think of the movie?"
               />
             </div>
@@ -158,7 +158,7 @@ export default function MovieDetails() {
             </button>
           </form>
         ) : (
-          <div style={{ backgroundColor: '#f9f9f9', padding: '20px', borderRadius: '8px', marginBottom: '30px', textAlign: 'center' }}>
+          <div style={{ backgroundColor: 'var(--section-bg)', padding: '20px', borderRadius: '8px', marginBottom: '30px', textAlign: 'center' }}>
             <p>You must be logged in to leave a review.</p>
             <button onClick={() => navigate('/login')} style={{ padding: '8px 15px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Log In</button>
           </div>
@@ -171,10 +171,10 @@ export default function MovieDetails() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {reviews.map(review => (
-              <div key={review.id} style={{ border: '1px solid #eee', padding: '15px', borderRadius: '8px' }}>
+              <div key={review.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '15px', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                   <strong>{review.userEmail}</strong>
-                  <span style={{ color: '#888', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
+                  <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div style={{ marginBottom: '10px' }}>
                   <StarRating rating={review.rating} readOnly={true} />

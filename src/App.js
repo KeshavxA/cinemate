@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
@@ -19,9 +21,10 @@ function Home() {
   return (
     <div style={{ textAlign: 'center', padding: '40px' }}>
       <h1>Welcome to Cinemate</h1>
-      <p>Your favorite movie tracking app.</p>
+      <p style={{ color: 'var(--muted-text)' }}>Your favorite movie tracking app.</p>
       
-      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px', marginBottom: '40px' }}>
+      <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '20px', marginBottom: '40px', alignItems: 'center' }}>
+        <ThemeToggle />
         <Link to="/search" style={navBtnStyle('#ffc107')}>Search</Link>
         {!currentUser ? (
           <>
@@ -59,11 +62,12 @@ const navBtnStyle = (bgColor) => ({
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <div className="App">
-          <Routes>
-            <Route path="/" element={<Home />} />
+    <ThemeProvider>
+      <Router>
+        <AuthProvider>
+          <div className="App" style={{ minHeight: '100vh', transition: 'background-color 0.3s ease' }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
             <Route path="/login" element={<Login />} />
@@ -87,7 +91,8 @@ function App() {
           </Routes>
         </div>
       </AuthProvider>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 

@@ -31,21 +31,21 @@ export default function Signup() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '40px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+    <div style={{ maxWidth: '400px', margin: '40px auto', padding: '20px', border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px' }}>
       <h2 style={{ textAlign: 'center' }}>Sign Up</h2>
       {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <div>
           <label>Email</label>
-          <input type="email" ref={emailRef} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+          <input type="email" ref={emailRef} required style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box', borderRadius: '4px' }} />
         </div>
         <div>
           <label>Password</label>
-          <input type="password" ref={passwordRef} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+          <input type="password" ref={passwordRef} required style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box', borderRadius: '4px' }} />
         </div>
         <div>
           <label>Password Confirmation</label>
-          <input type="password" ref={passwordConfirmRef} required style={{ width: '100%', padding: '8px', marginTop: '5px' }} />
+          <input type="password" ref={passwordConfirmRef} required style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box', borderRadius: '4px' }} />
         </div>
         <button disabled={loading} type="submit" style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
           Sign Up

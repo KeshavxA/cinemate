@@ -16,14 +16,14 @@ export default function MovieCard({ movie }) {
   };
 
   return (
-    <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', width: '200px', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px', padding: '15px', width: '200px', display: 'flex', flexDirection: 'column' }}>
       <Link to={`/movie/${movie.id}`} style={{ textDecoration: 'none', color: 'inherit', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ backgroundColor: '#f0f0f0', height: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px', borderRadius: '4px' }}>
+        <div style={{ backgroundColor: 'var(--header-bg)', height: '250px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '10px', borderRadius: '4px' }}>
           {/* Placeholder for movie poster */}
-          <span style={{ color: '#888' }}>No Poster</span>
+          <span style={{ color: 'var(--muted-text)' }}>No Poster</span>
         </div>
         <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', flex: 1 }}>{movie.title}</h4>
-        <p style={{ margin: '0 0 15px 0', fontSize: '14px', color: '#666' }}>{movie.year}</p>
+        <p style={{ margin: '0 0 15px 0', fontSize: '14px', color: 'var(--muted-text)' }}>{movie.year}</p>
       </Link>
       
       <button 

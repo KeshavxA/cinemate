@@ -40,7 +40,7 @@ export default function Watchlists() {
   const createNewList = async (e) => {
     e.preventDefault();
     if (!newListName.trim()) return;
-    
+
     try {
       const newListRef = await addDoc(collection(db, 'watchlists'), {
         name: newListName,
@@ -65,12 +65,12 @@ export default function Watchlists() {
         <h3>My Lists</h3>
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           {lists.map(list => (
-            <li 
-              key={list.id} 
+            <li
+              key={list.id}
               onClick={() => setSelectedList(list)}
-              style={{ 
-                padding: '10px', 
-                cursor: 'pointer', 
+              style={{
+                padding: '10px',
+                cursor: 'pointer',
                 backgroundColor: selectedList?.id === list.id ? '#f0f0f0' : 'transparent',
                 borderRadius: '4px',
                 marginBottom: '5px'
@@ -82,9 +82,9 @@ export default function Watchlists() {
         </ul>
 
         <form onSubmit={createNewList} style={{ marginTop: '20px' }}>
-          <input 
-            type="text" 
-            placeholder="New list name" 
+          <input
+            type="text"
+            placeholder="New list name"
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
             style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
