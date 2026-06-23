@@ -8,6 +8,7 @@ export default function Search() {
   const [year, setYear] = useState('');
   const [director, setDirector] = useState('');
   const [language, setLanguage] = useState('');
+  const [sortBy, setSortBy] = useState('relevance');
   
   // Derive options from dummy data dynamically
   const genres = useMemo(() => {
@@ -30,7 +31,7 @@ export default function Search() {
 
   // Filter logic
   const filteredMovies = useMemo(() => {
-    return DUMMY_MOVIES.filter(movie => {
+    const filtered = DUMMY_MOVIES.filter(movie => {
       // 1. Text Search (title or actor)
       const matchesSearch = searchTerm === '' || 
         movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,7 +51,18 @@ export default function Search() {
 
       return matchesSearch && matchesGenre && matchesYear && matchesDirector && matchesLanguage;
     });
-  }, [searchTerm, genre, year, director, language]);
+    
+    // Sort logic
+    if (sortBy === 'highestRated') {
+      filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortBy === 'mostReviewed') {
+      filtered.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+    } else if (sortBy === 'newest') {
+      filtered.sort((a, b) => parseInt(b.year) - parseInt(a.year));
+    }
+    
+    return filtered;
+  }, [searchTerm, genre, year, director, language, sortBy]);
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -58,6 +70,7 @@ export default function Search() {
     setYear('');
     setDirector('');
     setLanguage('');
+    setSortBy('relevance');
   };
 
   return (
@@ -104,6 +117,13 @@ export default function Search() {
           <select value={language} onChange={(e) => setLanguage(e.target.value)} style={filterStyle}>
             <option value="">All Languages</option>
             {languages.map(l => <option key={l} value={l}>{l}</option>)}
+          </select>
+
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={{ ...filterStyle, fontWeight: 'bold' }}>
+            <option value="relevance">Sort by Relevance</option>
+            <option value="highestRated">Highest Rated</option>
+            <option value="mostReviewed">Most Reviewed</option>
+            <option value="newest">Newest Release</option>
           </select>
 
           <button onClick={clearFilters} style={{ padding: '10px 15px', backgroundColor: '#6c757d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>

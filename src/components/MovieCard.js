@@ -23,7 +23,13 @@ export default function MovieCard({ movie }) {
           <span style={{ color: 'var(--muted-text)' }}>No Poster</span>
         </div>
         <h4 style={{ margin: '0 0 10px 0', fontSize: '16px', flex: 1 }}>{movie.title}</h4>
-        <p style={{ margin: '0 0 15px 0', fontSize: '14px', color: 'var(--muted-text)' }}>{movie.year}</p>
+        <p style={{ margin: '0 0 5px 0', fontSize: '14px', color: 'var(--muted-text)' }}>{movie.year}</p>
+        {(movie.rating || movie.reviewCount) && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '15px', fontSize: '14px' }}>
+            {movie.rating && <span style={{ color: '#ffc107' }}>⭐ {movie.rating}</span>}
+            {movie.reviewCount && <span style={{ color: 'var(--muted-text)' }}>({movie.reviewCount.toLocaleString()})</span>}
+          </div>
+        )}
       </Link>
       
       <button 
