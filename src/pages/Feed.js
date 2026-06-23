@@ -9,7 +9,7 @@ import { DUMMY_MOVIES } from '../data/dummyMovies';
 export default function Feed() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
-  const [feedReviews, setFeedReviews] = useState([]);
+  const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export default function Feed() {
       });
 
       if (followingIds.length === 0) {
-        setFeedReviews([]);
+        setFeedItems([]);
         setLoading(false);
         return;
       }
@@ -50,12 +50,25 @@ export default function Feed() {
       
       const fetchedReviews = [];
       reviewsSnap.forEach(doc => {
-        fetchedReviews.push({ id: doc.id, ...doc.data() });
+        fetchedReviews.push({ id: doc.id, itemType: 'review', ...doc.data() });
       });
 
-      // Sort newest first
-      fetchedReviews.sort((a, b) => b.createdAt - a.createdAt);
-      setFeedReviews(fetchedReviews);
+      // 3. Fetch activities from those users
+      const activitiesQ = query(
+        collection(db, 'activities'), 
+        where('userId', 'in', chunk)
+      );
+      const activitiesSnap = await getDocs(activitiesQ);
+      
+      const fetchedActivities = [];
+      activitiesSnap.forEach(doc => {
+        fetchedActivities.push({ id: doc.id, itemType: 'activity', ...doc.data() });
+      });
+
+      // Merge and Sort newest first
+      const combined = [...fetchedReviews, ...fetchedActivities];
+      combined.sort((a, b) => b.createdAt - a.createdAt);
+      setFeedItems(combined);
     } catch (error) {
       console.error("Error fetching feed:", error);
     }
@@ -83,33 +96,56 @@ export default function Feed() {
       <h2>Activity Feed</h2>
       <p style={{ color: 'var(--muted-text)', marginBottom: '30px' }}>Recent reviews from cinephiles you follow.</p>
 
-      {feedReviews.length === 0 ? (
+      {feedItems.length === 0 ? (
         <div style={{ padding: '30px', textAlign: 'center', border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px' }}>
           <p>Your feed is quiet right now.</p>
-          <p style={{ color: 'var(--muted-text)', marginTop: '10px' }}>Follow more users or wait for them to post reviews!</p>
+          <p style={{ color: 'var(--muted-text)', marginTop: '10px' }}>Follow more users or wait for them to post reviews or add movies to their watchlists!</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {feedReviews.map(review => {
-            const movie = DUMMY_MOVIES.find(m => m.id === review.movieId);
+          {feedItems.map(item => {
+            const movie = DUMMY_MOVIES.find(m => m.id === item.movieId);
+            
+            if (item.itemType === 'activity' && item.type === 'watchlist_add') {
+              return (
+                <div key={item.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '20px', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <Link to={`/user/${item.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none', fontWeight: 'bold' }}>
+                        {item.userEmail}
+                      </Link>
+                      <span style={{ color: 'var(--muted-text)', margin: '0 10px' }}>added</span>
+                      <Link to={`/movie/${item.movieId}`} style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>
+                        {movie ? movie.title : 'a movie'}
+                      </Link>
+                      <span style={{ color: 'var(--muted-text)', margin: '0 10px' }}>to their list</span>
+                      <strong>{item.listName}</strong>
+                    </div>
+                    <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(item.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              );
+            }
+
+            // Otherwise, it's a review
             return (
-              <div key={review.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '20px', borderRadius: '8px' }}>
+              <div key={item.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '20px', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
                   <div>
-                    <Link to={`/user/${review.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none', fontWeight: 'bold' }}>
-                      {review.userEmail}
+                    <Link to={`/user/${item.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none', fontWeight: 'bold' }}>
+                      {item.userEmail}
                     </Link>
                     <span style={{ color: 'var(--muted-text)', margin: '0 10px' }}>reviewed</span>
-                    <Link to={`/movie/${review.movieId}`} style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>
+                    <Link to={`/movie/${item.movieId}`} style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>
                       {movie ? movie.title : 'a movie'}
                     </Link>
                   </div>
-                  <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
+                  <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(item.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div style={{ marginBottom: '10px' }}>
-                  <StarRating rating={review.rating} readOnly={true} />
+                  <StarRating rating={item.rating} readOnly={true} />
                 </div>
-                <p style={{ margin: 0, lineHeight: '1.5' }}>{review.reviewText}</p>
+                <p style={{ margin: 0, lineHeight: '1.5' }}>{item.reviewText}</p>
               </div>
             );
           })}

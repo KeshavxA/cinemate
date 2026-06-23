@@ -67,7 +67,7 @@ export default function AddToListModal({ movie, onClose }) {
     }
   };
 
-  const toggleMovieInList = async (listId, moviesInList) => {
+  const toggleMovieInList = async (listId, moviesInList, listName) => {
     const isMovieInList = moviesInList.some(m => m.id === movie.id);
     const listRef = doc(db, 'watchlists', listId);
 
@@ -82,6 +82,17 @@ export default function AddToListModal({ movie, onClose }) {
         // Add movie
         await updateDoc(listRef, {
           movies: arrayUnion(movie)
+        });
+        
+        // Record activity
+        await addDoc(collection(db, 'activities'), {
+          type: 'watchlist_add',
+          userId: currentUser.uid,
+          userEmail: currentUser.email,
+          movieId: movie.id,
+          listId: listId,
+          listName: listName,
+          createdAt: Date.now()
         });
       }
       fetchUserLists(); // refresh list state
@@ -111,7 +122,7 @@ export default function AddToListModal({ movie, onClose }) {
                       type="checkbox" 
                       id={`list-${list.id}`} 
                       checked={isChecked}
-                      onChange={() => toggleMovieInList(list.id, list.movies)}
+                      onChange={() => toggleMovieInList(list.id, list.movies, list.name)}
                       style={{ marginRight: '10px' }}
                     />
                     <label htmlFor={`list-${list.id}`}>{list.name}</label>
