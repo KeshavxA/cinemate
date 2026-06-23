@@ -9,6 +9,8 @@ import Profile from './pages/Profile';
 import Watchlists from './pages/Watchlists';
 import MovieDetails from './pages/MovieDetails';
 import Search from './pages/Search';
+import PublicProfile from './pages/PublicProfile';
+import Feed from './pages/Feed';
 import ProtectedRoute from './components/ProtectedRoute';
 import MovieCard from './components/MovieCard';
 import Recommendations from './components/Recommendations';
@@ -33,6 +35,7 @@ function Home() {
           </>
         ) : (
           <>
+            <Link to="/feed" style={navBtnStyle('#e83e8c')}>Feed</Link>
             <Link to="/watchlists" style={navBtnStyle('#6f42c1')}>My Lists</Link>
             <Link to="/profile" style={navBtnStyle('#17a2b8')}>Profile</Link>
             <button onClick={logout} style={{...navBtnStyle('#dc3545'), border: 'none', cursor: 'pointer', fontSize: '16px'}}>Log Out</button>
@@ -70,6 +73,8 @@ function App() {
               <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
+            <Route path="/user/:userId" element={<PublicProfile />} />
+            <Route path="/feed" element={<Feed />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route 

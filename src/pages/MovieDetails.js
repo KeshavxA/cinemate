@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { collection, query, where, getDocs, addDoc, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
@@ -173,7 +173,9 @@ export default function MovieDetails() {
             {reviews.map(review => (
               <div key={review.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '15px', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <strong>{review.userEmail}</strong>
+                  <Link to={`/user/${review.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none' }}>
+                    <strong>{review.userEmail}</strong>
+                  </Link>
                   <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div style={{ marginBottom: '10px' }}>

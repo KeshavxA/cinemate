@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export default function Profile() {
@@ -23,6 +23,9 @@ export default function Profile() {
     avatarUrl: '',
     favoriteGenres: ''
   });
+
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
 
   useEffect(() => {
     if (currentUser) {
@@ -48,6 +51,20 @@ export default function Profile() {
           favoriteGenres: (data.favoriteGenres || []).join(', ')
         });
       }
+      
+      // Fetch follow counts
+      try {
+        const followersQ = query(collection(db, 'follows'), where('followingId', '==', currentUser.uid));
+        const followersSnap = await getDocs(followersQ);
+        setFollowersCount(followersSnap.size);
+
+        const followingQ = query(collection(db, 'follows'), where('followerId', '==', currentUser.uid));
+        const followingSnap = await getDocs(followingQ);
+        setFollowingCount(followingSnap.size);
+      } catch (e) {
+        console.error("Error fetching follow counts", e);
+      }
+
     } catch (err) {
       console.error("Failed to fetch profile", err);
       setError("Failed to fetch profile data");
@@ -109,8 +126,14 @@ export default function Profile() {
       {error && <div style={{ color: 'red', marginBottom: '15px', padding: '10px', backgroundColor: 'rgba(255,0,0,0.1)', borderRadius: '4px' }}>{error}</div>}
       {success && <div style={{ color: 'green', marginBottom: '15px', padding: '10px', backgroundColor: 'rgba(0,255,0,0.1)', borderRadius: '4px' }}>{success}</div>}
 
-      <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid var(--border-color)' }}>
-        <strong>Email:</strong> <span style={{ color: 'var(--muted-text)' }}>{currentUser?.email}</span>
+      <div style={{ marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <strong>Email:</strong> <span style={{ color: 'var(--muted-text)' }}>{currentUser?.email}</span>
+        </div>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <div><strong>{followersCount}</strong> <span style={{ color: 'var(--muted-text)' }}>Followers</span></div>
+          <div><strong>{followingCount}</strong> <span style={{ color: 'var(--muted-text)' }}>Following</span></div>
+        </div>
       </div>
 
       {!isEditing ? (
