@@ -132,7 +132,15 @@ export default function PublicProfile() {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-              <h2 style={{ margin: 0 }}>Cinephile Profile</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <h2 style={{ margin: 0 }}>Cinephile Profile</h2>
+                <button onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('Link copied to clipboard!');
+                }} style={{ padding: '6px 10px', backgroundColor: 'var(--section-bg)', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer', color: 'var(--text-color)', fontSize: '14px' }}>
+                  🔗 Share
+                </button>
+              </div>
               {currentUser && (
                 <button 
                   onClick={toggleFollow} 

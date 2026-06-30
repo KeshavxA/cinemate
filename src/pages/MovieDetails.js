@@ -110,7 +110,15 @@ export default function MovieDetails() {
           <span style={{ color: 'var(--muted-text)' }}>No Poster</span>
         </div>
         <div>
-          <h1 style={{ margin: '0 0 10px 0' }}>{movie.title} ({movie.year})</h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h1 style={{ margin: '0 0 10px 0' }}>{movie.title} ({movie.year})</h1>
+            <button onClick={() => {
+              navigator.clipboard.writeText(window.location.href);
+              alert('Link copied to clipboard!');
+            }} style={{ padding: '8px 12px', backgroundColor: 'var(--section-bg)', border: '1px solid var(--border-color)', borderRadius: '4px', cursor: 'pointer', color: 'var(--text-color)' }}>
+              🔗 Share
+            </button>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
             <StarRating rating={Math.round(averageRating)} readOnly={true} />
             <span style={{ fontSize: '18px', fontWeight: 'bold' }}>{averageRating > 0 ? averageRating : 'No ratings yet'}</span>
