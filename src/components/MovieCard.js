@@ -2,10 +2,90 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AddToListModal from './AddToListModal';
 import { useAuth } from '../context/AuthContext';
+import { collection, query, where, getDocs, addDoc, updateDoc, arrayUnion, arrayRemove, doc as firestoreDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export default function MovieCard({ movie }) {
   const [showModal, setShowModal] = useState(false);
   const { currentUser } = useAuth();
+  const [isWatched, setIsWatched] = useState(false);
+
+  React.useEffect(() => {
+    if (currentUser) {
+      checkWatchedStatus();
+    }
+  }, [currentUser]);
+
+  const checkWatchedStatus = async () => {
+    try {
+      const q = query(
+        collection(db, 'watchlists'), 
+        where('userId', '==', currentUser.uid),
+        where('name', '==', 'Watched')
+      );
+      const snap = await getDocs(q);
+      if (!snap.empty) {
+        const listData = snap.docs[0].data();
+        if (listData.movies.some(m => m.id === movie.id)) {
+          setIsWatched(true);
+        }
+      }
+    } catch (e) {
+      console.error("Error checking watched status:", e);
+    }
+  };
+
+  const handleToggleWatched = async () => {
+    if (!currentUser) {
+      alert("Please log in to mark movies as watched.");
+      return;
+    }
+
+    const previousState = isWatched;
+    setIsWatched(!previousState);
+
+    try {
+      const q = query(
+        collection(db, 'watchlists'), 
+        where('userId', '==', currentUser.uid),
+        where('name', '==', 'Watched')
+      );
+      const snap = await getDocs(q);
+      
+      let listRef;
+      let listData = null;
+      if (snap.empty) {
+        const docRef = await addDoc(collection(db, 'watchlists'), {
+          name: 'Watched',
+          isDefault: true,
+          movies: [],
+          userId: currentUser.uid
+        });
+        listRef = firestoreDoc(db, 'watchlists', docRef.id);
+      } else {
+        listRef = firestoreDoc(db, 'watchlists', snap.docs[0].id);
+        listData = snap.docs[0].data();
+      }
+
+      if (previousState) {
+        if (listData) {
+          const movieToRemove = listData.movies.find(m => m.id === movie.id);
+          if (movieToRemove) {
+            await updateDoc(listRef, {
+              movies: arrayRemove(movieToRemove)
+            });
+          }
+        }
+      } else {
+        await updateDoc(listRef, {
+          movies: arrayUnion(movie)
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling watched:", error);
+      setIsWatched(previousState);
+    }
+  };
 
   const handleAddClick = () => {
     if (!currentUser) {
@@ -32,12 +112,28 @@ export default function MovieCard({ movie }) {
         )}
       </Link>
       
-      <button 
-        onClick={handleAddClick}
-        style={{ padding: '8px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-      >
-        Add to List
-      </button>
+      <div style={{ display: 'flex', gap: '5px' }}>
+        <button 
+          onClick={handleAddClick}
+          style={{ flex: 1, padding: '8px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Add to List
+        </button>
+        <button 
+          onClick={handleToggleWatched}
+          style={{ 
+            padding: '8px 12px', 
+            backgroundColor: isWatched ? '#007bff' : 'var(--section-bg)', 
+            color: isWatched ? 'white' : 'var(--text-color)', 
+            border: '1px solid var(--border-color)', 
+            borderRadius: '4px', 
+            cursor: 'pointer' 
+          }}
+          title={isWatched ? "Mark as Unwatched" : "Mark as Watched"}
+        >
+          {isWatched ? '✅' : '👀'}
+        </button>
+      </div>
 
       {showModal && (
         <AddToListModal 
