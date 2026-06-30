@@ -9,8 +9,38 @@ export default function Search() {
   const [director, setDirector] = useState('');
   const [language, setLanguage] = useState('');
   const [sortBy, setSortBy] = useState('relevance');
-  
-  // Derive options from dummy data dynamically
+
+  const [recentSearches, setRecentSearches] = useState(() => {
+    const saved = localStorage.getItem('cinemate_recent_searches');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [showRecent, setShowRecent] = useState(false);
+
+  const saveSearchTerm = (term) => {
+    const trimmed = term.trim();
+    if (!trimmed) return;
+    setRecentSearches(prev => {
+      const filtered = prev.filter(t => t.toLowerCase() !== trimmed.toLowerCase());
+      const updated = [trimmed, ...filtered].slice(0, 5);
+      localStorage.setItem('cinemate_recent_searches', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      saveSearchTerm(searchTerm);
+      setShowRecent(false);
+    }
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      saveSearchTerm(searchTerm);
+      setShowRecent(false);
+    }, 200);
+  };
+
   const genres = useMemo(() => {
     const allGenres = new Set();
     DUMMY_MOVIES.forEach(m => m.genres?.forEach(g => allGenres.add(g)));
@@ -33,10 +63,10 @@ export default function Search() {
   const filteredMovies = useMemo(() => {
     const filtered = DUMMY_MOVIES.filter(movie => {
       // 1. Text Search (title or actor)
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch = searchTerm === '' ||
         movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         movie.actors?.some(actor => actor.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+
       // 2. Genre Filter
       const matchesGenre = genre === '' || movie.genres?.includes(genre);
 
@@ -51,7 +81,7 @@ export default function Search() {
 
       return matchesSearch && matchesGenre && matchesYear && matchesDirector && matchesLanguage;
     });
-    
+
     // Sort logic
     if (sortBy === 'highestRated') {
       filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -60,7 +90,7 @@ export default function Search() {
     } else if (sortBy === 'newest') {
       filtered.sort((a, b) => parseInt(b.year) - parseInt(a.year));
     }
-    
+
     return filtered;
   }, [searchTerm, genre, year, director, language, sortBy]);
 
@@ -76,26 +106,63 @@ export default function Search() {
   return (
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
       <h1>Advanced Search</h1>
-      
+
       {/* Search and Filters Section */}
-      <div style={{ 
-        backgroundColor: 'var(--section-bg)', 
-        padding: '20px', 
-        borderRadius: '8px', 
+      <div style={{
+        backgroundColor: 'var(--section-bg)',
+        padding: '20px',
+        borderRadius: '8px',
         marginBottom: '30px',
         display: 'flex',
         flexDirection: 'column',
         gap: '15px'
       }}>
-        
-        <div>
-          <input 
-            type="text" 
-            placeholder="Search by title or actor name..." 
+
+        <div style={{ position: 'relative' }}>
+          <input
+            type="text"
+            placeholder="Search by title or actor name... (Press Enter to save to history)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onFocus={() => setShowRecent(true)}
+            onBlur={handleSearchBlur}
+            onKeyDown={handleSearchKeyDown}
             style={{ width: '100%', padding: '12px', fontSize: '16px', borderRadius: '4px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box' }}
           />
+          {showRecent && recentSearches.length > 0 && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              backgroundColor: 'var(--card-bg-color)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '4px',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              zIndex: 10,
+              marginTop: '4px'
+            }}>
+              {recentSearches.map((term, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setSearchTerm(term);
+                    saveSearchTerm(term);
+                    setShowRecent(false);
+                  }}
+                  style={{
+                    padding: '10px 15px',
+                    cursor: 'pointer',
+                    borderBottom: index === recentSearches.length - 1 ? 'none' : '1px solid var(--border-color)'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--header-bg)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  🕒 {term}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
