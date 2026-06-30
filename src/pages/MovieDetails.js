@@ -17,9 +17,9 @@ export default function MovieDetails() {
   const [averageRating, setAverageRating] = useState(0);
   const [loading, setLoading] = useState(true);
   
-  // New review form state
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
+  const [containsSpoilers, setContainsSpoilers] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -85,10 +85,12 @@ export default function MovieDetails() {
         userEmail: currentUser.email,
         rating,
         reviewText,
+        containsSpoilers,
         createdAt: Date.now()
       });
       setRating(0);
       setReviewText('');
+      setContainsSpoilers(false);
       fetchReviews(movie.id); // Refresh reviews
     } catch (error) {
       console.error("Error submitting review: ", error);
@@ -153,6 +155,15 @@ export default function MovieDetails() {
                 style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid var(--input-border)', backgroundColor: 'var(--input-bg)', color: 'var(--text-color)', boxSizing: 'border-box' }}
                 placeholder="What did you think of the movie?"
               />
+            </div>
+            <div style={{ marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input 
+                type="checkbox" 
+                id="spoilers" 
+                checked={containsSpoilers}
+                onChange={(e) => setContainsSpoilers(e.target.checked)}
+              />
+              <label htmlFor="spoilers">Contains Spoilers</label>
             </div>
             <button disabled={submitting} type="submit" style={{ padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
               {submitting ? 'Submitting...' : 'Submit Review'}

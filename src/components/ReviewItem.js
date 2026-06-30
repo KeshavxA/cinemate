@@ -9,6 +9,7 @@ export default function ReviewItem({ review, showMovieLink = false, movieTitle =
   const { currentUser } = useAuth();
   const [likes, setLikes] = useState(review.likedBy || []);
   const [isLiking, setIsLiking] = useState(false);
+  const [isSpoilerRevealed, setIsSpoilerRevealed] = useState(false);
 
   const hasLiked = currentUser ? likes.includes(currentUser.uid) : false;
 
@@ -60,7 +61,25 @@ export default function ReviewItem({ review, showMovieLink = false, movieTitle =
       <div style={{ marginBottom: '10px' }}>
         <StarRating rating={review.rating} readOnly={true} />
       </div>
-      <p style={{ margin: 0, lineHeight: '1.5', marginBottom: '15px' }}>{review.reviewText}</p>
+      {review.containsSpoilers && !isSpoilerRevealed ? (
+        <div 
+          onClick={() => setIsSpoilerRevealed(true)}
+          style={{ 
+            backgroundColor: 'var(--section-bg)', 
+            padding: '15px', 
+            borderRadius: '4px', 
+            border: '1px dashed var(--border-color)', 
+            cursor: 'pointer', 
+            textAlign: 'center',
+            marginBottom: '15px',
+            color: 'var(--muted-text)'
+          }}
+        >
+          🚫 Contains Spoilers - Click to View
+        </div>
+      ) : (
+        <p style={{ margin: 0, lineHeight: '1.5', marginBottom: '15px' }}>{review.reviewText}</p>
+      )}
       
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         <button 
