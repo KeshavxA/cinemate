@@ -4,6 +4,7 @@ import { doc, getDoc, collection, query, where, getDocs, addDoc, deleteDoc } fro
 import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import StarRating from '../components/StarRating';
+import ReviewItem from '../components/ReviewItem';
 
 export default function PublicProfile() {
   const { userId } = useParams();
@@ -177,18 +178,12 @@ export default function PublicProfile() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {reviews.map(review => (
-            <div key={review.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '15px', borderRadius: '8px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <strong style={{ cursor: 'pointer', color: '#007bff' }} onClick={() => navigate(`/movie/${review.movieId}`)}>
-                  View Movie Details
-                </strong>
-                <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
-              </div>
-              <div style={{ marginBottom: '10px' }}>
-                <StarRating rating={review.rating} readOnly={true} />
-              </div>
-              <p style={{ margin: 0 }}>{review.reviewText}</p>
-            </div>
+            <ReviewItem 
+              key={review.id} 
+              review={review} 
+              showMovieLink={true} 
+              movieTitle="View Movie Details" 
+            />
           ))}
         </div>
       )}

@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import StarRating from '../components/StarRating';
+import ReviewItem from '../components/ReviewItem';
 import { DUMMY_MOVIES } from '../data/dummyMovies';
 
 export default function Feed() {
@@ -129,24 +130,12 @@ export default function Feed() {
 
             // Otherwise, it's a review
             return (
-              <div key={item.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '20px', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-                  <div>
-                    <Link to={`/user/${item.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none', fontWeight: 'bold' }}>
-                      {item.userEmail}
-                    </Link>
-                    <span style={{ color: 'var(--muted-text)', margin: '0 10px' }}>reviewed</span>
-                    <Link to={`/movie/${item.movieId}`} style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>
-                      {movie ? movie.title : 'a movie'}
-                    </Link>
-                  </div>
-                  <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(item.createdAt).toLocaleDateString()}</span>
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <StarRating rating={item.rating} readOnly={true} />
-                </div>
-                <p style={{ margin: 0, lineHeight: '1.5' }}>{item.reviewText}</p>
-              </div>
+              <ReviewItem 
+                key={item.id} 
+                review={item} 
+                showMovieLink={true} 
+                movieTitle={movie ? movie.title : 'a movie'} 
+              />
             );
           })}
         </div>

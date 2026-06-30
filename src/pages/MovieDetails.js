@@ -5,6 +5,7 @@ import { db } from '../firebase';
 import { useAuth } from '../context/AuthContext';
 import { DUMMY_MOVIES } from '../data/dummyMovies';
 import StarRating from '../components/StarRating';
+import ReviewItem from '../components/ReviewItem';
 
 export default function MovieDetails() {
   const { id } = useParams();
@@ -171,18 +172,7 @@ export default function MovieDetails() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {reviews.map(review => (
-              <div key={review.id} style={{ border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', padding: '15px', borderRadius: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                  <Link to={`/user/${review.userId}`} style={{ color: 'var(--text-color)', textDecoration: 'none' }}>
-                    <strong>{review.userEmail}</strong>
-                  </Link>
-                  <span style={{ color: 'var(--muted-text)', fontSize: '14px' }}>{new Date(review.createdAt).toLocaleDateString()}</span>
-                </div>
-                <div style={{ marginBottom: '10px' }}>
-                  <StarRating rating={review.rating} readOnly={true} />
-                </div>
-                <p style={{ margin: 0 }}>{review.reviewText}</p>
-              </div>
+              <ReviewItem key={review.id} review={review} />
             ))}
           </div>
         )}
