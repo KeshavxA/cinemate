@@ -59,30 +59,24 @@ export default function Search() {
     return Array.from(new Set(DUMMY_MOVIES.map(m => m.language).filter(Boolean))).sort();
   }, []);
 
-  // Filter logic
   const filteredMovies = useMemo(() => {
     const filtered = DUMMY_MOVIES.filter(movie => {
-      // 1. Text Search (title or actor)
+
       const matchesSearch = searchTerm === '' ||
         movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         movie.actors?.some(actor => actor.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      // 2. Genre Filter
       const matchesGenre = genre === '' || movie.genres?.includes(genre);
 
-      // 3. Year Filter
       const matchesYear = year === '' || movie.year === year;
 
-      // 4. Director Filter
       const matchesDirector = director === '' || movie.director === director;
 
-      // 5. Language Filter
       const matchesLanguage = language === '' || movie.language === language;
 
       return matchesSearch && matchesGenre && matchesYear && matchesDirector && matchesLanguage;
     });
 
-    // Sort logic
     if (sortBy === 'highestRated') {
       filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     } else if (sortBy === 'mostReviewed') {
@@ -203,7 +197,14 @@ export default function Search() {
       <div>
         <h2 style={{ marginBottom: '20px' }}>Results ({filteredMovies.length})</h2>
         {filteredMovies.length === 0 ? (
-          <p style={{ color: 'var(--muted-text)' }}>No movies found matching your criteria.</p>
+          <div style={{ textAlign: 'center', padding: '60px 20px', backgroundColor: 'var(--section-bg)', borderRadius: '8px', border: '1px dashed var(--border-color)', marginTop: '20px' }}>
+            <span style={{ fontSize: '48px', display: 'block', marginBottom: '15px' }}>🍿</span>
+            <h3 style={{ margin: '0 0 10px 0' }}>No Movies Found</h3>
+            <p style={{ color: 'var(--muted-text)', margin: 0 }}>We couldn't find any movies matching your current filters. Try tweaking your search terms or clearing some filters.</p>
+            <button onClick={clearFilters} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+              Clear All Filters
+            </button>
+          </div>
         ) : (
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
             {filteredMovies.map(movie => (

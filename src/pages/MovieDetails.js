@@ -191,7 +191,11 @@ export default function MovieDetails() {
         {loading ? (
           <p>Loading reviews...</p>
         ) : reviews.length === 0 ? (
-          <p>No reviews yet. Be the first to review!</p>
+          <div style={{ textAlign: 'center', padding: '40px 20px', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px', border: '1px dashed var(--border-color)' }}>
+            <span style={{ fontSize: '48px', display: 'block', marginBottom: '15px' }}>✍️</span>
+            <h3 style={{ margin: '0 0 10px 0' }}>No Reviews Yet</h3>
+            <p style={{ color: 'var(--muted-text)', margin: 0 }}>Be the first to share your thoughts on {movie.title}!</p>
+          </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {reviews.map(review => (

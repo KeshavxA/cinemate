@@ -102,9 +102,13 @@ export default function Feed() {
       <p style={{ color: 'var(--muted-text)', marginBottom: '30px' }}>Recent reviews from cinephiles you follow.</p>
 
       {feedItems.length === 0 ? (
-        <div style={{ padding: '30px', textAlign: 'center', border: '1px solid var(--border-color)', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px' }}>
-          <p>Your feed is quiet right now.</p>
+        <div style={{ padding: '60px 20px', textAlign: 'center', border: '1px dashed var(--border-color)', backgroundColor: 'var(--card-bg-color)', borderRadius: '8px' }}>
+          <span style={{ fontSize: '48px', display: 'block', marginBottom: '15px' }}>🦗</span>
+          <h3 style={{ margin: '0 0 10px 0' }}>It's quiet... too quiet.</h3>
           <p style={{ color: 'var(--muted-text)', marginTop: '10px' }}>Follow more users or wait for them to post reviews or add movies to their watchlists!</p>
+          <button onClick={() => navigate('/')} style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
+            Explore Movies
+          </button>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
