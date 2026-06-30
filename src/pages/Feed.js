@@ -13,6 +13,10 @@ export default function Feed() {
   const [feedItems, setFeedItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleReviewDelete = (reviewId) => {
+    setFeedItems(prev => prev.filter(item => item.id !== reviewId));
+  };
+
   useEffect(() => {
     if (currentUser) {
       fetchFeed();
@@ -135,6 +139,7 @@ export default function Feed() {
                 review={item} 
                 showMovieLink={true} 
                 movieTitle={movie ? movie.title : 'a movie'} 
+                onDelete={handleReviewDelete}
               />
             );
           })}

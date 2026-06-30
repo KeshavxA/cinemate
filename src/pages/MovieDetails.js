@@ -22,6 +22,10 @@ export default function MovieDetails() {
   const [containsSpoilers, setContainsSpoilers] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const handleReviewDelete = (reviewId) => {
+    setReviews(prev => prev.filter(r => r.id !== reviewId));
+  };
+
   useEffect(() => {
     // In a real app, this would fetch from TMDB
     const foundMovie = DUMMY_MOVIES.find(m => m.id === id);
@@ -191,7 +195,7 @@ export default function MovieDetails() {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {reviews.map(review => (
-              <ReviewItem key={review.id} review={review} />
+              <ReviewItem key={review.id} review={review} onDelete={handleReviewDelete} />
             ))}
           </div>
         )}

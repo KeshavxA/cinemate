@@ -14,16 +14,19 @@ export default function PublicProfile() {
   const [profile, setProfile] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Follow state
   const [isFollowing, setIsFollowing] = useState(false);
   const [followDocId, setFollowDocId] = useState(null);
   const [followLoading, setFollowLoading] = useState(false);
 
+  const handleReviewDelete = (reviewId) => {
+    setReviews(prev => prev.filter(r => r.id !== reviewId));
+  };
+
   useEffect(() => {
     if (!userId) return;
-    
-    // Redirect to personal profile if viewing own profile
+
     if (currentUser && currentUser.uid === userId) {
       navigate('/profile');
       return;
@@ -65,7 +68,7 @@ export default function PublicProfile() {
   const checkFollowStatus = async () => {
     try {
       const q = query(
-        collection(db, 'follows'), 
+        collection(db, 'follows'),
         where('followerId', '==', currentUser.uid),
         where('followingId', '==', userId)
       );
@@ -142,15 +145,15 @@ export default function PublicProfile() {
                 </button>
               </div>
               {currentUser && (
-                <button 
-                  onClick={toggleFollow} 
+                <button
+                  onClick={toggleFollow}
                   disabled={followLoading}
-                  style={{ 
-                    padding: '8px 20px', 
-                    backgroundColor: isFollowing ? 'var(--header-bg)' : '#007bff', 
-                    color: isFollowing ? 'var(--text-color)' : 'white', 
-                    border: isFollowing ? '1px solid var(--border-color)' : 'none', 
-                    borderRadius: '20px', 
+                  style={{
+                    padding: '8px 20px',
+                    backgroundColor: isFollowing ? 'var(--header-bg)' : '#007bff',
+                    color: isFollowing ? 'var(--text-color)' : 'white',
+                    border: isFollowing ? '1px solid var(--border-color)' : 'none',
+                    borderRadius: '20px',
                     cursor: followLoading ? 'wait' : 'pointer',
                     fontWeight: 'bold'
                   }}
@@ -186,11 +189,12 @@ export default function PublicProfile() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {reviews.map(review => (
-            <ReviewItem 
-              key={review.id} 
-              review={review} 
-              showMovieLink={true} 
-              movieTitle="View Movie Details" 
+            <ReviewItem
+              key={review.id}
+              review={review}
+              showMovieLink={true}
+              movieTitle="View Movie Details"
+              onDelete={handleReviewDelete}
             />
           ))}
         </div>
